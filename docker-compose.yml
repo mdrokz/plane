@@ -7,6 +7,8 @@ services:
       args:
         DOCKER_BUILDKIT: 1
     restart: always
+    expose:
+      - "3000:3000"
     depends_on:
       - api
     environment:
@@ -81,6 +83,8 @@ services:
       args:
         DOCKER_BUILDKIT: 1
     restart: always
+    expose:
+      - "8000:8000"
     command: ./bin/docker-entrypoint-api.sh
     environment:
       DEBUG: ${DEBUG}
@@ -344,24 +348,24 @@ services:
       MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID}
       MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY}
 
-  # Comment this if you already have a reverse proxy running
-  proxy:
-    container_name: proxy
-    build:
-      context: ./apps/proxy
-      dockerfile: Dockerfile.ce
-    restart: always
-    ports:
-      - ${LISTEN_HTTP_PORT}:80
-      - ${LISTEN_HTTPS_PORT}:443
-    environment:
-      FILE_SIZE_LIMIT: ${FILE_SIZE_LIMIT}
-      BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
-    depends_on:
-      - web
-      - api
-      - space
-      - admin
+# Comment this if you already have a reverse proxy running
+  # proxy:
+  #   container_name: proxy
+  #   build:
+  #     context: ./apps/proxy
+  #     dockerfile: Dockerfile.ce
+  #   restart: always
+  #   ports:
+  #     - ${LISTEN_HTTP_PORT}:80
+  #     - ${LISTEN_HTTPS_PORT}:443
+  #   environment:
+  #     FILE_SIZE_LIMIT: ${FILE_SIZE_LIMIT}
+  #     BUCKET_NAME: ${AWS_S3_BUCKET_NAME}
+  #   depends_on:
+  #     - web
+  #     - api
+  #     - space
+  #     - admin
 
 volumes:
   pgdata:
